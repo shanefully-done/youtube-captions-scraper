@@ -5,23 +5,22 @@ import axios from 'axios';
 import { find } from 'lodash';
 import striptags from 'striptags';
 
-const fetchData =
-  typeof fetch === 'function'
-    ? async function fetchData(url) {
-        const response = await fetch(url);
-        return await response.text();
-      }
-    : async function fetchData(url) {
-        const { data } = await axios.get(url);
-        return data;
-      };
+const fetchData = async function fetchData(url) {
+  const { data } = await axios.get(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Safari/537.36',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Referer': 'https://www.youtube.com',
+      'Origin': 'https://www.youtube.com',
+    },
+  });
+  return data;
+};
 
 export async function getSubtitles({
   videoID,
   lang = 'en',
-}: {
-  videoID: string,
-  lang: 'en' | 'de' | 'fr' | void,
 }) {
   const data = await fetchData(
     `https://youtube.com/watch?v=${videoID}`
